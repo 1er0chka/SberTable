@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Table</title>
+</head>
+<body>
+<table border="1px">
+    <tr>
+        <th>id</th>
+        <th>L-1</th>
+        <th></th>
+    </tr>
+    {{#each users}}
+        <tr>
+            <td width="200">{{this.id}}</td>
+            <td width="200" onclick="openLevel(l2, {{this.id}})">{{this.l1}}</td>
+        </tr>
+    {{/each}}
+</table>
+</body>
+<script>
+    function openLevel(level) {
+        fetch('/open', {
+            method: 'POST', // Используйте метод HTTP, который соответствует вашим требованиям
+            headers: {
+                'Content-Type': 'text/plain' // Установите заголовок Content-Type в соответствии с ожидаемым типом данных
+            },
+            body: level // При необходимости передайте данные в теле запроса
+        })
+                .then(response => {
+                    // Обработка ответа от сервера
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                });
+    }
+</script>
+</html>
