@@ -3,11 +3,18 @@ module.exports = app => {
 
     var router = require("express").Router();
 
+    router.get("/", elements.base);
+
+    // открыть новый уровень
+    router.put("/open", elements.open);
+
+
+
     // Create a new Element
-    router.post("/", elements.create);
+    router.post("/create", elements.create);
 
     // Retrieve all Elements
-    router.get("/", elements.findAll);
+    router.get("/findAll", elements.findAll);
 
     // Retrieve all published Elements
     router.get("/published", elements.findAllPublished);
