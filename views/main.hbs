@@ -11,20 +11,20 @@
         <th>L-1</th>
     </tr>
     {{#each users}}
-        <tr>
+        <tr id="columns">
             <td width="200">{{this.id}}</td>
-            <td width="200" onclick="openLevel( {{this.id}}, {{this.isLeaf}}, 'l2')">{{this.l1}}</td>
+            <td width="200" onclick="openLevel( {{this.id}}, {{this.isLeaf}}, 'l2', this)">{{this.l1}}</td>
         </tr>
     {{/each}}
 </table>
 <script>
-    function openLevel(id, isLeaf, level) {
+    function openLevel(id, isLeaf, level, element) {
         if (isLeaf) {
             const data = {
                 id: id,
                 level: level
             };
-            fetch('/open', {
+            fetch('/elements/open', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -32,9 +32,30 @@
                 body: JSON.stringify(data)
             })
                     .then(response => response.json())
-                    .then(data => {
-                        // Обработка полученного объекта
-                        console.log(data);
+                    .then(newData => {
+                        document.getElementById('myTable').querySelectorAll('tr').forEach((child) => {
+                            let column = document.createElement('td');
+                            column.onclick = function () {
+                                openLevel(newData.id, newData.isLeaf, 'l' + (parseInt(level.substring(1)) + 1), column);
+                            }
+                            column.width = "200";
+                            column.textContent = newData.label;
+                            if (child.querySelector('td') != null) {
+                                if (parseInt(child.querySelector('td').textContent) === parseInt(newData.id)) {
+                                    child.appendChild(column);
+
+                                    let header = document.getElementById('myTable').querySelector('tr');
+                                    console.log(header);
+                                    if (header.querySelectorAll('th').length < child.querySelectorAll('td').length){
+                                        let th = document.createElement('th');
+                                        th.textContent = 'L-' + parseInt(level.substring(1));
+                                        header.appendChild(th);
+                                    }
+
+                                }
+                            }
+                            element.onclick = null;
+                        });
                     })
                     .catch(error => {
                         // Обработка ошибок
