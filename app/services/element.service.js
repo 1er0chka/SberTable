@@ -12,8 +12,8 @@ exports.base = (req, res) => {
                 };
             });
             openElements = formattedElements;
-            res.render("main.hbs", {
-                users: formattedElements
+            res.render("elementsTable.hbs", {
+                elements: formattedElements
             });
         })
         .catch(err => {
@@ -29,8 +29,6 @@ exports.open = (req, res) => {
         id: req.body.id,
         level: req.body.level
     };
-    console.log("1")
-
     Element.findByPk(element.id)
         .then(data => {
             const nextField = Object.keys(data.dataValues)[Object.keys(data.dataValues).indexOf(element.level) + 1];

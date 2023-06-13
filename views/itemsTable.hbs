@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Table</title>
+</head>
+<body>
+<table border="1px" id="myTable">
+    <tr>
+        <th>id</th>
+        <th>info</th>
+    </tr>
+    {{#each items}}
+        <tr id="row-{{this.id}}">
+            <td width="200">{{this.id}}</td>
+            <td width="200" contenteditable="true" onclick="startEdit(event)" oncontextmenu="showContextMenu(event)">{{this.info}}</td>
+            <td style="color: red" onclick="deleteData({{this.id}})">Х</td>
+        </tr>
+    {{/each}}
+    <tr>
+        <td id="newId" width="200" contenteditable="true">Введите id</td>
+        <td id="newInfo" width="200" contenteditable="true">Введите info</td>
+        <td style="color: green" onclick="addData()">+</td>
+    </tr>
+</table>
+<script>
+    function startEdit(event) {
+        const tdElement = event.target;
+        tdElement.setAttribute('data-previous-value', tdElement.textContent.trim());
+        tdElement.addEventListener('keydown', handleKeyDown);
+        tdElement.addEventListener('blur', handleBlur);
+    }
+    // Обработчик нажатия клавиш
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const tdElement = event.target;
+            tdElement.blur();
+        }
+    }
+    // Обработчик снятия фокуса с элемента
+    function handleBlur(event) {
+        const tdElement = event.target;
+        const newValue = tdElement.textContent.trim();
+        const previousValue = tdElement.getAttribute('data-previous-value');
+        if (newValue !== previousValue) {
+            const id = tdElement.parentElement.querySelector('td:first-child').textContent;
+            updateData(id, newValue);
+        }
+        tdElement.removeEventListener('keydown', handleKeyDown);
+        tdElement.removeEventListener('blur', handleBlur);
+    }
+
+    function updateData(id, newValue) {
+        const data = {
+            id: id,
+            info: newValue
+        };
+        fetch('/items/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+                .then(response => {
+                    // Обработка ответа от сервера
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                });
+    }
+
+    function deleteData(id) {
+        const data = {
+            id: id
+        }
+        fetch('/items/delete', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+                .then(response => {
+                    const row = document.getElementById(`row-${id}`);
+                    if (row) {
+                        row.remove();
+                    }
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                });
+    }
+
+    function addData() {
+        const data = {
+            id: document.getElementById('newId').textContent,
+            info: document.getElementById('newInfo').textContent
+        }
+        fetch('/items/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+                .then(response => {
+                    document.location.href = ('/items');
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                });
+    }
+</script>
+</body>
+</html>

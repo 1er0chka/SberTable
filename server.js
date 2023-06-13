@@ -7,14 +7,9 @@ var corsOptions = {
     origin: "http://localhost:8081"
 };
 app.use(cors(corsOptions));
-
-// парсинг json req
 app.use(express.json());
-
-// получение данных о бд
 const db = require("./app/models");
 
-// синхронизация модели бд с бд
 db.sequelize.sync()
     .then(() => {
         console.log("Synced db.");
@@ -23,14 +18,10 @@ db.sequelize.sync()
         console.log("Failed to sync db: " + err.message);
     });
 
-// подключение
-require("./app/routers/element.routers.js")(app);
+
+require("./app/routers/element.router.js")(app);
+require("./app/routers/item.router.js")(app);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}.`);
 });
-
-
-// TODO если что-то сломается - добавить
-// парсинг запросов типа - application/x-www-form-urlencoded
-//app.use(express.urlencoded({ extended: true }));

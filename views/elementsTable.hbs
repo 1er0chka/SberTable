@@ -10,7 +10,7 @@
         <th>id</th>
         <th>L-1</th>
     </tr>
-    {{#each users}}
+    {{#each elements}}
         <tr id="columns">
             <td width="200">{{this.id}}</td>
             <td width="200" onclick="openLevel( {{this.id}}, {{this.isLeaf}}, 'l2', this)">{{this.l1}}</td>
@@ -51,7 +51,6 @@
                                         th.textContent = 'L-' + parseInt(level.substring(1));
                                         header.appendChild(th);
                                     }
-
                                 }
                             }
                             element.onclick = null;
