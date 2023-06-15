@@ -1,13 +1,5 @@
-module.exports = {
-    HOST: "localhost",
-    USER: "postgres",
-    PASSWORD: "2612",
-    DB: "table",
+const Sequelize = require("sequelize");
+module.exports = sequelize = new Sequelize("table", "postgres", "2612", {
     dialect: "postgres",
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-};
+    host: "localhost"
+});

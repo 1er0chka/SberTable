@@ -1,9 +1,9 @@
-const db = require("../models");
-const Item = db.items;
-const temporal = require('../models/item.temporal.model');
+const db = require("../models/item.model");
+const temporal = require("../models/item.temporal.model")
+
 
 exports.base = (req, res) => {
-    Item.findAll({
+    db.findAll({
         order: [['id', 'ASC']]
     })
         .then(data => {
@@ -26,7 +26,7 @@ exports.update = (req, res) => {
     }
 
     console.log(newData); // undef undef
-    Item.update(newData, {
+    db.update(newData, {
         where: {id: newData.id}
     })
         .then(num => {
@@ -48,7 +48,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-    Item.destroy({
+    db.destroy({
         where: {id: req.body.id}
     })
         .then(num => {
@@ -75,7 +75,7 @@ exports.create = (req, res) => {
         info: req.body.info
     }
     console.log(item)
-    Item.create(item)
+    db.create(item)
         .then(data => {
             res.send({
                 message: "Tutorial was created successfully!"
